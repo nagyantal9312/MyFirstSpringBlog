@@ -29,7 +29,7 @@
                             <p th:text="#{username} + ': ' + ${ezegyBlogger.username}"></p>
                             <p th:text="#{email} + ': ' + ${ezegyBlogger.email}"></p>
                             <p th:text="#{birthdate} + ': ' + ${#dates.format(ezegyBlogger.birthDate, 'yyyy.MM.dd')}"></p>
-                            <p th:text="#{user.enabled} + ': ' + (${ezegyBlogger.isEnabled()} ? #{yes} : #{no})"></p>
+<!--                            <p th:text="#{user.enabled} + ': ' + (${ezegyBlogger.isEnabled()} ? #{yes} : #{no})"></p>-->
                         </div>
                     </div>
                 </div>

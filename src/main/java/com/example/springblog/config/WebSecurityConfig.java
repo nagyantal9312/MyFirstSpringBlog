@@ -55,9 +55,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginPage("/login")
                     .permitAll()
                     .successForwardUrl("/blogger")
+                    .failureForwardUrl("/login")
+                .failureUrl("/login")
                     .and()
                 .logout()
                     .permitAll()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .logoutSuccessUrl("/login")
         ;
 //
 //        /*
