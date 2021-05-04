@@ -39,11 +39,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
+                .headers().frameOptions().disable().and()
                 .csrf().disable()
                 .authorizeRequests()
                     .antMatchers("/resources/**").permitAll()
                     .antMatchers("/css/**", "/images/**").permitAll()
                     .antMatchers("/register", "/blogger/**").permitAll()
+                    .antMatchers("/blogpost/**").permitAll()
                     .antMatchers("/h2/**").permitAll()
                     .antMatchers("/h2-console/**").permitAll()
                     .antMatchers("/h2-console/**/**").permitAll()
@@ -59,30 +61,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                     .permitAll()
         ;
-        /**
-        http
+//
+//        /*
+//        http
 //                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/register").permitAll()
-                .antMatchers("/login").permitAll()
-
-                .antMatchers("/css/**", "/images/**").permitAll()
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/h2/**").permitAll()
-                .antMatchers("/**").permitAll()
-                .and()
-                .formLogin()
-                    .loginPage("/login").permitAll()
-                    .successForwardUrl("/blogger")
-                    .failureForwardUrl("/login")
-                //.failureUrl("/login")
-                .and()
-                .logout().permitAll()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login")
-
-        ;
-**/
+//                .authorizeRequests()
+//                .antMatchers("/register").permitAll()
+//                .antMatchers("/login").permitAll()
+//
+//                .antMatchers("/css/**", "/images/**").permitAll()
+//                .antMatchers("/h2-console/**").permitAll()
+//                .antMatchers("/h2/**").permitAll()
+//                .antMatchers("/**").permitAll()
+//                .and()
+//                .formLogin()
+//                    .loginPage("/login").permitAll()
+//                    .successForwardUrl("/blogger")
+//                    .failureForwardUrl("/login")
+//                .failureUrl("/login")
+//                .and()
+//                .logout().permitAll()
+//                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+//                .logoutSuccessUrl("/login")
+//
+//        ;
+//*/
+//
     }
-
+//
 }

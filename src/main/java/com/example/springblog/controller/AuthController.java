@@ -24,10 +24,14 @@ public class AuthController {
         this.bloggerService = bloggerService;
     }
 
-
     @GetMapping("/login")
     public String loginForm(Blogger blogger) {
         return "login";
+    }
+
+    @GetMapping("/")
+    public String mainPage() {
+        return "redirect:/login";
     }
 
     @GetMapping("/register")
