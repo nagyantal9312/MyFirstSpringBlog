@@ -33,6 +33,20 @@ public class BloggerController {
         this.bloggerService = bloggerService;
     }
 
+
+
+    @GetMapping("")
+    public String listBlogPosts_get(Model model, @RequestParam(value = "cim", required = false) String title) {
+
+        if (title == null) {
+            model.addAttribute("posztok", blogPostService.listBlogPosts());
+        } else {
+            model.addAttribute("posztok", blogPostService.searchBlogPostByTitle(title.strip()));
+        }
+        return "home";
+    }
+
+
     @PostMapping("")
     public String listBlogPosts_post(){
         return "home";
