@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://thymeleaf.org/extras/spring-security">
+<div th:replace="fragments/header :: header (title='Read post')"></div>
+
+<body>
+<div th:replace="fragments/menu :: menu(current='List Posts')"></div>
+
+
+<main>
+
+    <!--/*@thymesVar id="blogPost" type="hu.suaf.springblog.model.BlogPost"*/-->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 th:text="${poszt.title}">Cim</h1>
+                <p class="lead">
+                    <label th:text="#{author} + ':'"></label>
+                    <a href="#" th:href="@{/blogger/profile/{username}(username=${poszt.createdBy})}"
+                       th:text="${poszt.createdBy}">szerzőneve</a>
+                </p>
+
+
+                <!--like/dislikeszam-->
+                <div>
+                    <img class="logo" th:src="@{/images/likeIcon.svg}">
+                    <label th:text="${likeSzam}">666</label>
+                    <img class="logo" th:src="@{/images/dislikeIcon.svg}">
+                    <label th:text="${dislikeSzam}">777</label>
+                </div>
+
+
+                <hr>
+                <p th:text="${#dates.format(poszt.createdDate, 'yyyy-MM-dd HH:mm')}">posztolás ideje</p>
+                <hr>
+                <p class="lead" th:text="${poszt.text}">poszt szoveg</p>
+                <hr>
+
+                <!--komment irasa-->
+                <!--/*@thymesVar id="komment" type="hu.suaf.springblog.model.Comment"*/-->
+                <div class="card my-4" sec:authorize="isAuthenticated()">
+                    <h5 class="card-header" th:text="#{leave_a_comment} + ':'">Leave a Comment:</h5>
+                    <div class="card-body">
+                        <form th:object="${komment}" th:action="@{/blogpost/{blogPostId}(blogPostId=${poszt.id})}"
+                              method="post">
+                            <div class="form-group">
+                                <textarea class="form-control" rows="3" th:field="*{text}"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" th:text="#{submit}">Submit</button>
+                        </form>
+                    </div>
+                </div>
+
+
+                <!--kommentek listazasa-->
+                <!--/*@thymesVar id="szerzo" type="hu.suaf.springblog.model.Blogger"*/-->
+                <!--/*@thymesVar id="comments" type="hu.suaf.springblog.model.Comment"*/-->
+                <div class="media mb-4" th:each="item : ${poszt.comments}">
+                    <img class="d-flex mr-3 rounded-circle" th:src="*{'data:image/png;base64,'+ item.photoHelper}"
+                         height="50px" alt="">
+
+
+                    <div class="media-body">
+                        <h5 class="mt-1">
+                            <a th:href="@{/blogger/profile/{username}(username=${item.createdBy})}"
+                               th:text="${item.createdBy}"></a>
+
+                        </h5>
+                        <p th:text="${item.text}">Comment Text</p>
+                        <div class="d-flex w-100 justify-content-between">
+                            <small th:text="${#dates.format(item.createdDate, 'yyyy-MM-dd HH:mm:ss')}">Creationdate</small>
+
+
+                            <!--kommentertekelesek kijelzese-->
+                            <div>
+                                <img class="logo" th:src="@{/images/likeIcon.svg}">
+                                <label th:text="${item.likesNumber}">666</label>
+                                <img class="logo" th:src="@{/images/dislikeIcon.svg}">
+                                <label th:text="${item.dislikesNumber}">777</label>
+                            </div>
+
+
+                            <!--komment like/dislike gombok-->
+                            <div>
+                                <a href="#"
+                                   th:href="@{/blogpost/comment/{commentId}/{name}/{type}(commentId=${item.id},name=${#authentication.getName()},type=true)}"
+                                   sec:authorize="isAuthenticated()">
+                                    <button class="btn btn-outline-primary">
+                                        <img class="logo" th:src="@{/images/likeIcon.svg}"><small
+                                            th:text="#{like}">Like</small>
+                                    </button>
+                                </a>
+                                <a href="#"
+                                   th:href="@{/blogpost/comment/{commentId}/{name}/{type}(commentId=${item.id},name=${#authentication.getName()},type=false)}"
+                                   sec:authorize="isAuthenticated()">
+                                    <button class="btn btn-outline-primary">
+                                        <img class="logo" th:src="@{/images/dislikeIcon.svg}"><small
+                                            th:text="#{dislike}">Dislike</small>
+                                    </button>
+                                </a>
+                            </div>
+
+                            <div th:if="${item.createdBy} == ${#authentication.getName()}">
+                                <a href="#" th:href="@{/blogpost/comment/edit/{commentId}(commentId=${item.id})}">
+                                    <img class="logo" th:src="@{/images/updateIcon.svg}">
+                                </a>
+                                <a href="#" th:href="@{/blogpost/comment/delete/{commentId}(commentId=${item.id})}">
+                                    <img class="logo" th:src="@{/images/deleteIcon.svg}">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <!-- Categories Widget -->
+                <div class="card my-4">
+                    <h5 class="card-header" th:text="#{categories}">Categories</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <ul class="list-unstyled mb-0">
+                                    <li th:each="item : ${poszt.categories}">
+                                        <!--<a href="#" th:text="${item.name}">JavaScript</a>-->
+                                        <p href="#" th:text="${item.name}">JavaScript</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card my-4">
+                    <h5 class="card-header" th:text="#{action}">Action</h5>
+                    <div class="card-body">
+                        <a href="#" th:href="@{/blogpost/edit/{blogPostId}(blogPostId=${poszt.id})}"
+                           th:if="${poszt.createdBy} == ${#authentication.getName()}">
+                            <button class="btn btn-outline-primary">
+                                <img th:src="@{/images/updateIcon.svg}"><small th:text="#{edit}"></small>
+                            </button>
+                        </a>
+                        <a href="#" th:href="@{/blogpost/delete/{blogPostId}(blogPostId=${poszt.id})}"
+                           th:if="${poszt.createdBy} == ${#authentication.getName()}">
+                            <button class="btn btn-outline-primary">
+                                <img th:src="@{/images/deleteIcon.svg}"><small th:text="#{delete}"></small>
+                            </button>
+                        </a>
+
+                        <!--posztertekeles-->
+                        <a href="#"
+                           th:href="@{/blogpost/{blogPostId}/{name}/{type}(blogPostId=${poszt.id},name=${#authentication.getName()},type=true)}"
+                           sec:authorize="isAuthenticated()">
+                            <button class="btn btn-outline-primary">
+                                <img th:src="@{/images/likeIcon.svg}"><small th:text="#{like}">Like</small>
+                            </button>
+                        </a>
+                        <a href="#"
+                           th:href="@{/blogpost/{blogPostId}/{name}/{type}(blogPostId=${poszt.id},name=${#authentication.getName()},type=false)}"
+                           sec:authorize="isAuthenticated()">
+                            <button class="btn btn-outline-primary">
+                                <img th:src="@{/images/dislikeIcon.svg}"><small th:text="#{dislike}">Dislike</small>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

@@ -1,11 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/header :: header (title='List of new posts')"></div>
+
 <body>
-    <p>Hello Wordl</p>
+<div th:replace="fragments/menu :: menu(current='List Posts')"></div>
+
+
+<main th:object="${posztok}">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action" th:each="item : ${posztok}"
+                       th:href="@{/blogpost/{id}(id=${item.id})}">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1" th:text="${item.title}">Cim</h5>
+                            <small th:text="${#dates.format(item.createdDate, 'yyyy-MM-dd HH:mm')}">Creationdate</small>
+                        </div>
+                        <p class="mb-1" th:text="#{author} + ': ' + ${item.createdBy}"></p>
+                        <small th:text="#{categories}">Kategóriák:</small>
+                        <small th:each="elem : ${item.categories}">
+                            <span class="badge badge-primary" th:text="${elem.name}">Primary</span>
+                        </small>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <!-- Search Widget -->
+                <div class="card my-4">
+                    <h5 class="card-header" th:text="#{search.in.title}">Search</h5>
+                    <div class="card-body">
+                        <form th:action="@{/blogger}" method="get" class="input-group">
+                            <input th:name="cim" type="text" class="form-control" th:placeholder="#{search.for}"
+                                   placeholder="Search for...">
+                            <span class="input-group-append">
+                                <button class="btn btn-secondary" type="submit">Go!</button>
+                            </span>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>
 
 </body>
 </html>

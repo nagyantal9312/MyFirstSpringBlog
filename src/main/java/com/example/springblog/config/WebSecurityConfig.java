@@ -43,10 +43,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
+                .csrf().disable()
                 .authorizeRequests()
                     .antMatchers("/resources/**").permitAll()
                     .antMatchers("/css/**", "/images/**").permitAll()
-                    .antMatchers("/register", "/blogger").permitAll()
+                    .antMatchers("/register", "/blogger/**").permitAll()
+                    .antMatchers("/h2/**").permitAll()
+                    .antMatchers("/h2-console/**").permitAll()
                     .antMatchers("/resources*").permitAll()
                     .anyRequest().authenticated()
                     .and()

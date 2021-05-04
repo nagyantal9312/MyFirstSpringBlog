@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/header :: header (title='Edit Comment')"></div>
+
+<body>
+<div th:replace="fragments/menu :: menu(current='New Post')"></div>
+
+<div class="container">
+    <!--/*@thymesVar id="komment" type="hu.suaf.springblog.model.Comment"*/-->
+    <form action="#" method="post" th:action="@{/blogpost/comment/edit/{id}(id=${komment.id})}" th:object="${komment}">
+        <div class="form-group">
+            <label for="commentText" th:text="#{text}">Szöveg</label>
+            <input type="text" class="form-control" id="commentText" th:field="*{text}">
+            <span class="validationError" th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></span>
+        </div>
+        <button type="submit" class="btn btn-primary" th:text="#{submit}">Submit</button>
+    </form>
+</div>
+
+</body>
+</html>

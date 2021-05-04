@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.apache.commons.io.FileUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +52,60 @@ public class BloggerService {
         blogger.setPassword(passwordEncoder.encode(blogger.getPassword()));
         bloggerRepository.save(blogger);
     }
+
+
+    public void editBlogger(Blogger blogger) {
+
+        Blogger bg = bloggerRepository.findByUsername(blogger.getUsername());
+        blogger.setPhoto(bg.getPhoto());
+        blogger.setBlogPostReactions(bg.getBlogPostReactions());
+        blogger.setCommentReactions(bg.getCommentReactions());
+        if (blogger.getPassword() == null || blogger.getPassword().isEmpty()) {
+            blogger.setPassword(bg.getPassword());
+        } else {
+            blogger.setPassword(passwordEncoder.encode(blogger.getPassword()));
+        }
+        bloggerRepository.save(blogger);
+    }
+
+
+    public Blogger banBlogger(Blogger blogger) {
+
+        if (blogger.isEnabled()) {
+            blogger.setEnabled(false);
+        } else {
+            blogger.setEnabled(true);
+        }
+        return bloggerRepository.save(blogger);
+    }
+
+
+    public void uploadPhoto(Blogger blogger, MultipartFile image) {
+
+        byte[] fileContent = new byte[0];
+        try {
+            fileContent = image.getBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String encodedString = Base64
+                .getEncoder()
+                .encodeToString(fileContent);
+
+        blogger.setPhoto(encodedString);
+        bloggerRepository.save(blogger);
+    }
+
+
+    public Blogger findByUsername(String username) {
+        return bloggerRepository.findByUsername(username);
+    }
+
+    public void deleteBlogger(String username) {
+        bloggerRepository.deleteByUsername(username);
+    }
+
+
 
 
 
