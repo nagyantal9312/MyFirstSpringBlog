@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/header :: header (title='Login')"></div>
+
+<body>
+<div th:replace="fragments/menu :: menu(current='Login')"></div>
+
+
+<div class="container">
+    <!--/*@thymesVar id="blogger" type="hu.suaf.springblog.model.Blogger"*/-->
+    <form action="#" th:action="@{/login}" th:object="${blogger}" method="post">
+        <div class="form-group">
+            <label for="username" th:text="#{username}">Username</label>
+            <input type="text" class="form-control" id="username" th:field="*{username}">
+            <span class="validationError"></span>
+        </div>
+        <div class="form-group">
+            <label for="password" th:text="#{password}">Password</label>
+            <input type="password" class="form-control" id="password" th:field="*{password}">
+            <span class="validationError"></span>
+        </div>
+        <div class="validationError" th:if="${param.error}"
+             th:with="errorMsg=${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
+            <label th:text="#{login.error}"></label>
+            <span th:text="${errorMsg}">Wrong input!</span>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary" th:text="#{login}">XLoginX</button>
+        <a th:href="@{/register}" class="btn btn-secondary" th:text="#{register}">Register</a>
+    </form>
+</div>
+
+
+</body>
+</html>

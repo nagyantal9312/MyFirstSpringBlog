@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/header :: header (title='Register')"></div>
+<body>
+<div th:replace="fragments/menu :: menu(current='Register')"></div>
+
+
+<div class="container">
+    <!--/*@thymesVar id="blogger" type="hu.suaf.springblog.model.Blogger"*/-->
+    <form action="#" th:action="@{/register}" th:object="${blogger}" method="post">
+        <div class="form-group">
+            <label for="username" th:text="#{username}">Username</label>
+            <input type="text" class="form-control" id="username" th:field="*{username}">
+            <span class="validationError" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+        </div>
+        <div class="form-group">
+            <label for="name" th:text="#{realname}">Real Name</label>
+            <input type="text" class="form-control" id="name" th:field="*{name}">
+            <span class="validationError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+        </div>
+        <div class="form-group">
+            <label for="email" th:text="#{email}">Email</label>
+            <input type="email" class="form-control" id="email" th:field="*{email}">
+            <span class="validationError" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+        </div>
+        <div class="form-group">
+            <label for="password" th:text="#{password}">Password</label>
+            <input type="password" class="form-control" id="password" th:field="*{password}">
+            <span class="validationError" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+        </div>
+        <button type="submit" class="btn btn-primary" th:text="#{register}">Register</button>
+    </form>
+</div>
+</body>
+</html>

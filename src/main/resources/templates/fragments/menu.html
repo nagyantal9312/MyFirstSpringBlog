@@ -1,0 +1,46 @@
+<nav th:fragment="menu(current)" class="navbar navbar-expand-lg navbar-light bg-light"
+     xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://thymeleaf.org/extras/spring-security">
+    <a class="navbar-brand" href="#">
+        <img class="logo" th:src="@{/images/logo.svg}">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" th:classappend="${current} == 'Login' ? 'active' : ''" href="#"
+               th:href="@{/login}" th:text="#{login}" sec:authorize="!isAuthenticated()">Login</a>
+            <a class="nav-item nav-link" th:classappend="${current} == 'Register' ? 'active' : ''" href="#"
+               th:href="@{/register}" th:text="#{register}" sec:authorize="!isAuthenticated()">Register</a>
+            <a class="nav-item nav-link" th:classappend="${current} == 'List Posts' ? 'active' : ''" href="#"
+               th:href="@{/blogger}" th:text="#{listposts}">List posts</a>
+            <a class="nav-item nav-link" th:classappend="${current} == 'New Post' ? 'active' : ''" href="#"
+               th:href="@{/blogger/post-create}" th:text="#{newpost}" sec:authorize="isAuthenticated()">New Post</a>
+            <a class="nav-item nav-link" sec:authentication="name"
+               th:classappend="${current} == 'Profile' ? 'active' : ''" href="#"
+               th:href="@{/blogger/profile/{username}(username=${#authentication.getName()})}"
+               sec:authorize="isAuthenticated()">Profile</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false" th:text="#{language}">
+                    Dropdown
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#" th:href="@{?lang=en}">
+                        <img th:src="@{/images/greatBritainFlag.svg}"><label th:text="#{lang.en}"></label>
+                    </a>
+                    <a class="dropdown-item" href="#" th:href="@{?lang=hu}">
+                        <img th:src="@{/images/hungarianFlag.svg}"><label th:text="#{lang.hu}"></label>
+                    </a>
+                </div>
+            </li>
+
+        </div>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-item nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}" th:text="#{logout}">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>

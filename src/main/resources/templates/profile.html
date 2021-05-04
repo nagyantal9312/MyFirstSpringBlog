@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://thymeleaf.org/extras/spring-security">
+<div th:replace="fragments/header :: header (title='Profile')"></div>
+
+<body>
+<div th:replace="fragments/menu :: menu(current='Profile')"></div>
+
+
+<div class="container">
+    <div class="row my-2">
+        <div class="col-lg-8 order-lg-2">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a href="" data-target="#profile" data-toggle="tab" class="nav-link active" th:text="#{profile}">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a href="" data-target="#edit" data-toggle="tab" class="nav-link" th:text="#{edit}"
+                       th:if="${ezegyBlogger.username} == ${#authentication.getName()}">Edit</a>
+                </li>
+            </ul>
+
+
+            <div class="tab-content py-4">
+                <div class="tab-pane active" id="profile">
+                    <h5 class="mb-3" th:text="#{user_profile}">User Profile</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p th:text="#{realname} + ': ' + ${ezegyBlogger.name}"></p>
+                            <p th:text="#{username} + ': ' + ${ezegyBlogger.username}"></p>
+                            <p th:text="#{email} + ': ' + ${ezegyBlogger.email}"></p>
+                            <p th:text="#{birthdate} + ': ' + ${#dates.format(ezegyBlogger.birthDate, 'yyyy.MM.dd')}"></p>
+                            <p th:text="#{user.enabled} + ': ' + (${ezegyBlogger.isEnabled()} ? #{no} : #{yes})"></p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="tab-pane" id="edit">
+                    <form role="form" th:object="${ezegyBlogger}"
+                          th:action="@{/blogger/profile/{username}(username=${ezegyBlogger.username})}" method="post">
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label" th:text="#{realname}">Real
+                                Name</label>
+                            <div class="col-lg-9">
+                                <input class="form-control" type="text" th:field="${ezegyBlogger.name}"
+                                       th:value="${ezegyBlogger.name}">
+                            </div>
+                            <span class="validationError" th:if="${#fields.hasErrors('name')}"
+                                  th:errors="*{name}"></span>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label" th:text="#{email}">Email</label>
+                            <div class="col-lg-9">
+                                <input class="form-control" type="email" th:field="${ezegyBlogger.email}"
+                                       th:value="${ezegyBlogger.email}">
+                            </div>
+                            <span class="validationError" th:if="${#fields.hasErrors('email')}"
+                                  th:errors="*{email}"></span>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label"
+                                   th:text="#{password}">Password</label>
+                            <div class="col-lg-9">
+                                <input class="form-control" type="password" th:field="${ezegyBlogger.password}"
+                                       th:autocomplete="off">
+                            </div>
+                            <span class="validationError" th:if="${#fields.hasErrors('password')}"
+                                  th:errors="*{password}"></span>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label" th:text="#{birthdate}">Birth
+                                date</label>
+                            <div class="col-lg-9">
+                                <input class="form-control" type="date" th:field="${ezegyBlogger.birthDate}">
+                            </div>
+                            <span class="validationError" th:if="${#fields.hasErrors('birthDate')}"
+                                  th:errors="*{birthDate}"></span>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label"></label>
+                            <div class="col-lg-9">
+                                <button type="reset" class="btn btn-secondary" value="Cancel"
+                                        th:text="#{cancel}"></button>
+                                <button type="submit" class="btn btn-primary" value="Save Changes"
+                                        th:text="#{save}"></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <div class="col-lg-4 order-lg-1 text-center">
+            <img th:src="*{'data:image/png;base64,'+ezegyBlogger.photo}" src="//placehold.it/150"
+                 class="mx-auto img-fluid img-circle d-block" alt="avatar">
+
+            <div th:if="${ezegyBlogger.username} == ${#authentication.getName()}">
+                <h6 class="mt-2" th:text="#{upload_a_different_photo}">Upload a different photo</h6>
+                <form enctype="multipart/form-data" method="post"
+                      th:action="@{/blogger/profile/photo/{username}(username=${ezegyBlogger.username})}">
+                    <div>
+                        <label class="custom-file" for="image">
+                            <input class="btn" accept="image/png, image/jpeg" type="file" id="image" name="image">
+                        </label>
+                    </div>
+                    <div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <img th:src="@{/images/uploadIcon.svg}"><small th:text="#{upload_image}"></small>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
